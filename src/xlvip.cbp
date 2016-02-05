@@ -42,7 +42,12 @@
 			<Add option="/W3" />
 			<Add option="/EHsc" />
 		</Compiler>
+		<Linker>
+			<Add library="lib/libcurl.lib" />
+		</Linker>
 		<Unit filename="main.cpp" />
+		<Unit filename="url2file.cpp" />
+		<Unit filename="url2file.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

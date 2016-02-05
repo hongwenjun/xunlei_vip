@@ -1,6 +1,5 @@
-@echo 鑾峰彇杩呴浄VIP甯愬彿
+@echo 获取迅雷VIP帐号
 @cd %~dp0bin/
-@del *.html
-@xlvip.exe
-
-@pause
+@echo 请稍等正在获取数据中.............
+@xlvip.exe  > %tmp%\ok.txt
+@start %tmp%\ok.txt

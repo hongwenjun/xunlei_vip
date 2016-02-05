@@ -9,6 +9,8 @@
 #include <string>
 #include <regex>
 
+#include "url2file.h"
+
 using namespace std;
 int main()
 {
@@ -25,7 +27,7 @@ int main()
     char cur_day [32];
     char yesterday [32];
     strftime(cur_day, 32, "%Y-%m-%d", timeinfo);
-   printf("%s\n", cur_day);
+    printf("%s\n", cur_day);
 
     rawtime = rawtime - 24 * 3600;
     strftime(yesterday, 32, "%Y-%m-%d", localtime(&rawtime));
@@ -34,9 +36,11 @@ int main()
 
 
 //  到521xunlei页面去获取vip帐号
-    system("wget -q  http://www.521xunlei.com -O index.html");
+
     string xlvip_html = "http://www.521xunlei.com";
     string vipid_html;
+
+    url2file(xlvip_html.c_str(), "index.html");
 
     char update_html_reg[128];
     sprintf(update_html_reg, "<em>%s</em>.*</a></label> <a href=\"(.*\\.html)", cur_day);
@@ -74,10 +78,8 @@ int main()
     cout << vipid_html << endl;
     xlvip_html = xlvip_html + "/" + vipid_html;
 
-    string  cmdline = string("wget -q  ") + xlvip_html + " -O " + vipid_html ;
 
-//    cout << cmdline << endl;
-    system(cmdline.c_str());
+    url2file(xlvip_html.c_str(), vipid_html.c_str());
 
 // 从VIP帐号页面获取 帐号和密码
     ifstream vipid_file(vipid_html.c_str());

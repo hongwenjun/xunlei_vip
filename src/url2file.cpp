@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
  *                             / __| | | | |_) | |
@@ -67,6 +67,7 @@ bool url2file(const char* web_url, const char* savefile)
 
     /// disable progress meter, set to 0L to enable and disable debug output   禁用进度表，设置为0L启用和禁用调试输出
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+
 
     /// send all data to this function  所有数据发送给这个函数
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);

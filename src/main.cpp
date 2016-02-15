@@ -1,4 +1,4 @@
-#include <iostream>     // std::cout
+﻿#include <iostream>     // std::cout
 #include <string>
 #include <fstream>      // std::ifstream
 
@@ -9,6 +9,7 @@
 #include <string>
 #include <regex>
 
+#include "xlvip_api.h"
 #include "url2file.h"
 
 using namespace std;
@@ -35,15 +36,41 @@ int main()
 
 
 
+    string xlvip_ini[3] = { "http://www.521xunlei.com",
+                            "<em>%s</em>.*</a></label> <a href=\"(.*\\.html)",
+                            "(\\w+:\\d).*\\D+(\\d+)[<br />|</font><br />]"
+                          };
+
+    if (IsFileExist("xlvip.ini")) {
+
+        ifstream infile("xlvip.ini");
+        string line ;
+
+        int id = 0;
+
+        while (getline(infile, line)) {
+
+            // 排除空行 和 注释行
+            if (line.size() <  3   || line[0] == '/')
+                continue;
+            xlvip_ini[id++] = line;
+        }
+    }
+
+
 //  到521xunlei页面去获取vip帐号
 
-    string xlvip_html = "http://www.521xunlei.com";
+    string xlvip_html = xlvip_ini[0] ;
     string vipid_html;
 
+
     url2file(xlvip_html.c_str(), "index.html");
+    // 检查html文件是否压缩，如果是 gz压缩先解压文件
+    if (-1 == html_gzdecode("index.html"))
+        return -1;
 
     char update_html_reg[128];
-    sprintf(update_html_reg, "<em>%s</em>.*</a></label> <a href=\"(.*\\.html)", cur_day);
+    sprintf(update_html_reg,  xlvip_ini[1].c_str(), cur_day);
     std::regex e(update_html_reg);
     ifstream infile("index.html");
     string line ;
@@ -61,7 +88,7 @@ int main()
 
 //  获取昨天的vip帐号页面
     if (!cur_day_flag) {
-        sprintf(update_html_reg, "<em>%s</em>.*</a></label> <a href=\"(.*\\.html)", yesterday);
+        sprintf(update_html_reg, xlvip_ini[1].c_str(), yesterday);
         e = update_html_reg;
         infile.clear();
         infile.seekg(ios_base::beg);
@@ -80,14 +107,18 @@ int main()
 
 
     url2file(xlvip_html.c_str(), vipid_html.c_str());
+// 检查html文件是否压缩，如果是 gz压缩先解压文件
+    if (-1 == html_gzdecode(vipid_html.c_str()))
+        return -1;
 
-// 从VIP帐号页面获取 帐号和密码
+
+    // 从VIP帐号页面获取 帐号和密码
     ifstream vipid_file(vipid_html.c_str());
 
     // 2016年公式   (\w+:\d).*\D+(\d+)[<br />|</font><br />]
     // 2015年公式   (\w+:\d)\D+(\d+)<br />
 
-    std::regex vipid_reg("(\\w+:\\d).*\\D+(\\d+)[<br />|</font><br />]");
+    std::regex vipid_reg(xlvip_ini[2]);
 
     while (getline(vipid_file, line)) {
         if (std::regex_search(line, m, vipid_reg)) {

@@ -23,7 +23,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/xlvip" prefix_auto="1" extension_auto="1" />
+				<Option output="../bin/xlvip" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="msvc10" />
@@ -44,10 +44,13 @@
 		</Compiler>
 		<Linker>
 			<Add library="lib/libcurl.lib" />
+			<Add library="lib/zlib.lib" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Unit filename="url2file.cpp" />
 		<Unit filename="url2file.h" />
+		<Unit filename="xlvip_api.cpp" />
+		<Unit filename="xlvip_api.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
